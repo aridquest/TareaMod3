@@ -31,7 +31,15 @@ tilapias$estacion <- as.factor(tilapias$estacion)
 tilapias$densidad <- as.factor(tilapias$densidad)
 aggregate(tilapias$aumento, by =list(tilapias$densidad, tilapias$estacion), FUN = mean)
 
-plot(tilapias$densidad:tilapias$estacion, tilapias$aumento)
+plot(tilapias$densidad:tilapias$estacion, tilapias$aumento,
+     xlab = "Densidad de peces por estación",
+     ylab = "Aumento de crecimiento de los peces (g)",
+     main = "Aumento vs. Densidad para tilapias por estación",
+     cex.lab = 0.6,
+     cex.axis = 0.5,
+     cex.main = 0.8,
+     las = 2)
+
 
 bartlett.test(aumento ~ interaction(densidad,estacion), data = tilapias)
 # p-value = 0.1445
@@ -48,14 +56,44 @@ shapiro.test(residuals(anova1))
 #p-value = 0.607
 #Sí cumple con la normalidad
 
-interaction.plot(tilapias$estacion, tilapias$densidad, tilapias$aumento, type="b", col=c(1:3), 
-                 leg.bty="o", leg.bg="beige", lwd=2, pch=c(15,24,22), xlab="Estación",  
-                 ylab="Peso (g)", main="Gráfico de interacción")
+interaction.plot(tilapias$estacion, tilapias$densidad, tilapias$aumento, 
+                 type="b", 
+                 col=c(1:3),
+                 leg.bty="o", 
+                 leg.bg="beige",
+                 lty = 1,
+                 cex=0.8,
+                 trace.label = "Densidad",
+                 lwd=2, 
+                 pch=c(15,24,22), 
+                 xlab="Estación",  
+                 ylab="Aumento (g)",
+                 cex.lab= 0.9,
+                 cex.axis=0.6,
+                 cex.main=0.9,
+                 las=1,
+                 main="Gráfico de interacción: Densidad de los peces")
 
 
-interaction.plot(tilapias$densidad, tilapias$estacion, tilapias$aumento, type="b", col=c(1:3), 
-                 leg.bty="o", leg.bg="beige", lwd=2, pch=c(15,24,22), xlab="Estación",  
-                 ylab="Peso (g)", main="Gráfico de interacción")
+
+
+interaction.plot(tilapias$densidad, tilapias$estacion, tilapias$aumento, 
+                 type="b", 
+                 col=c(1:3), 
+                 leg.bty="o", 
+                 leg.bg="beige",
+                 lty = 1,
+                 cex=0.8,
+                 trace.label = "Estación",
+                 lwd=2, 
+                 pch=c(15,24,22), 
+                 xlab="Densidad",  
+                 ylab="Aumento (g)",
+                 cex.lab= 0.9,
+                 cex.axis=0.6,
+                 cex.main=0.9,
+                 las=1,
+                 main="Gráfico de interacción: Estación del año")
 
 #Ahora prueba de Tukey para ver quienes tienes diferencias entre los grupos 
 TukeyHSD(anova1)
@@ -113,6 +151,7 @@ shapiro.test(residuals(anova3))
 #p-value = 0.09754
 #Hay normalidad de los residuos
 
+
 hist(residuals(anova3))
 #Los residuos son normales
 
@@ -151,9 +190,24 @@ view(datos.ml)
 #H0: La producción del 2009 no se relaciona con las hectáreas de maíz (explicado por azar)
 #Ha: La producción del 2009 se relaciona con las hectareas de maíz (el modelo lo explica)
 #Para observar la homocedasticidad de los datos
-plot(datos.ml$ha_maiz, datos.ml$produccion_2009)
+plot(datos.ml$ha_maiz, datos.ml$produccion_2009,
+     xlab = "Hectáreas de maíz",
+     ylab = "producción del 2009",
+     main = "Producción del maíz por hectárea",
+     cex.lab = 0.9,
+     cex.axis = 0.6,
+     cex.main = 0.9,
+     las =1)
 #Sí tenían forma de cono por lo que se transformaron
-plot(log10(datos.ml$ha_maiz), log10(datos.ml$produccion_2009))
+plot(log10(datos.ml$ha_maiz), log10(datos.ml$produccion_2009),
+     xlab = "Hectáreas de maíz",
+     ylab = "producción del 2009",
+     main = "Producción del maíz por hectárea",
+     cex.lab = 0.9,
+     cex.axis = 0.6,
+     cex.main = 0.9,
+     las =1)
+
 
 datos.ml$ha_maiz <- log10(datos.ml$ha_maiz)     
 datos.ml$produccion_2009 <- log10(datos.ml$produccion_2009)
@@ -171,13 +225,6 @@ summary(lm.toluca2)
 
 plot(lm.toluca2)
 plot(lm.toluca2$residuals)
-#Gráfica con etiquetas
-plot(datos.ml$produccion_2009 ~ datos.ml$ha_maiz, xlab="Hectáreas de maíz", ylab="Producción 2009", cex.axis=1.2, cex.lab=1.1)
-
-library("calibrate")
-library("MASS")
-textxy(datos.ml$ha_maiz, datos.ml$produccion_2009, row.names(datos.ml))
-# no salen las etiquetas
 
 #Distancia de Cook
 library(car)
@@ -190,6 +237,14 @@ durbinWatsonTest(lm.toluca2)
 #Los errores no están correlacionados 
 
 #Ajustamos recta de regresión
+plot(datos.ml$ha_maiz, datos.ml$produccion_2009,
+     xlab = "Hectáreas de maíz",
+     ylab = "producción del 2009",
+     main = "Producción del maíz por hectárea",
+     cex.lab = 0.9,
+     cex.axis = 0.6,
+     cex.main = 0.9,
+     las =1)
 abline(lm.toluca2)
 
 #¿Qué tan bueno es este modelo para realizar predicciones?
@@ -250,10 +305,18 @@ Paredon <- paste("Paredón= ", round(coef.comunidad[1],2) + round(coef.comunidad
 SanFran <- paste("San Francisco= ", round(coef.comunidad[1],2) + round(coef.comunidad[3], 4), 
                                "+ (", round(coef.comunidad[4], 5), "* Ha_maiz)")
 
-plot(log10(produccion_2009) ~ comunidad * log10(ha_maiz), data = datos.comunidad, col = comunidad,
-                xlab = "Hectáreas de maíz (Log10)",
-                ylab = "Producción del 2009 (Log10)", main = "Producción de maíz por comunidad")
-legend("bottomright", legend = unique(datos.comunidad$comunidad), col = unique(datos.comunidad$comunidad), pch = 1)
+plot(log10(produccion_2009) ~ comunidad * log10(ha_maiz), 
+     data = datos.comunidad, 
+     col = comunidad,
+     xlab = "Hectáreas de maíz (Log10)",
+     ylab = "Producción del 2009 (Log10)", 
+     main = "Producción de maíz por comunidad",
+     cex.lab = 0.9,
+     cex.axis = 0.6,
+     cex.main = 0.9,
+     las =1)
+        
+legend("bottomright", legend = unique(datos.comunidad$comunidad), col = unique(datos.comunidad$comunidad), pch = 1, cex = 0.6)
 
 #recta Chapultepec
 abline(a = 3.29, b = 0.67672, col = "black")
